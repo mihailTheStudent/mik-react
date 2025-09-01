@@ -1,10 +1,11 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 
+import { getGroupName } from '../../utils/naming-functions';
+import { IngredientsGroup } from './ingredients-group/ingredients-group';
+
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
-import { IngredientsGroup } from './ingredients-group/ingredients-group';
-import { getGroupName } from '../../utils/naming-functions';
 
 type TBurgerIngredientsProps = {
   ingredients: TIngredient[];
@@ -17,13 +18,13 @@ export const BurgerIngredients = ({
     mains = [],
     sauces = [];
 
-  for (let ingredient of ingredients) {
-    let type = ingredient.type;
-    if (type === "bun") {
+  for (const ingredient of ingredients) {
+    const type = ingredient.type;
+    if (type === 'bun') {
       buns.push(ingredient);
-    } else if (type === "main") {
+    } else if (type === 'main') {
       mains.push(ingredient);
-    } else if (type === "sauce") {
+    } else if (type === 'sauce') {
       sauces.push(ingredient);
     }
   }
@@ -39,7 +40,7 @@ export const BurgerIngredients = ({
               /* TODO */
             }}
           >
-            {getGroupName("bun")}
+            {getGroupName('bun')}
           </Tab>
           <Tab
             value="sauce"
@@ -48,7 +49,7 @@ export const BurgerIngredients = ({
               /* TODO */
             }}
           >
-            {getGroupName("sauce")}
+            {getGroupName('sauce')}
           </Tab>
           <Tab
             value="main"
@@ -57,7 +58,7 @@ export const BurgerIngredients = ({
               /* TODO */
             }}
           >
-            {getGroupName("main")}
+            {getGroupName('main')}
           </Tab>
         </ul>
       </nav>

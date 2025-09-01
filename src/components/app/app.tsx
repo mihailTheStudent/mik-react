@@ -1,14 +1,15 @@
+import { useState } from 'react';
+
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 import { ingredients } from '@utils/ingredients';
 
 import styles from './app.module.css';
-import { useState } from 'react';
 
 export const App = (): React.JSX.Element => {
-  const [_ingredients, ] = useState(ingredients);
-  
+  const [_ingredients] = useState(ingredients);
+
   return (
     <div className={styles.app}>
       <AppHeader />
