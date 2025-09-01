@@ -37,9 +37,7 @@ export const BurgerStructureItem = ({
       <div className={ingredientClasses.join(' ')}>
         <img src={image_mobile} className={styles.img} />
         <span className={`${styles.name} ml-5 mr-5`}>{name}</span>
-        <span className="mr-5">
-          <Price price={price} />
-        </span>
+        <Price price={price} extraClass="mr-5" />
         <span>
           {isBun ? <LockIcon type="secondary" /> : <DeleteIcon type="primary" />}
         </span>

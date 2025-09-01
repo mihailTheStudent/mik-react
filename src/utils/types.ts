@@ -14,3 +14,7 @@ export type TIngredient = {
 };
 
 export type TIngredientType = 'bun' | 'sauce' | 'main';
+
+export type TCommonProps = {
+  extraClass?: string;
+};

@@ -1,3 +1,4 @@
+import { BurgerOrder } from './burger-order/burger-order';
 import { BurgerStructureItem } from './burger-structure-item/burger-structure-item';
 
 import type { TIngredient } from '@utils/types';
@@ -26,19 +27,22 @@ export const BurgerConstructor = ({
   const burgerItems = [bun, ...otherIngredients, bun];
 
   return (
-    <section className={styles.burger_constructor}>
-      {burgerItems.map((burgerItem, index) => {
-        const isTopBun = index === 0;
-        const isBottomBun = index === burgerItems.length - 1;
-        return (
-          <BurgerStructureItem
-            key={index}
-            ingredient={burgerItem}
-            isTopBun={isTopBun}
-            isBottomBun={isBottomBun}
-          />
-        );
-      })}
+    <section className={`${styles.burger_constructor} pt-4 pl-4 pr-4`}>
+      <div className={styles.burger_structure}>
+        {burgerItems.map((burgerItem, index) => {
+          const isTopBun = index === 0;
+          const isBottomBun = index === burgerItems.length - 1;
+          return (
+            <BurgerStructureItem
+              key={index}
+              ingredient={burgerItem}
+              isTopBun={isTopBun}
+              isBottomBun={isBottomBun}
+            />
+          );
+        })}
+      </div>
+      <BurgerOrder ingredients={ingredients} />
     </section>
   );
 };
