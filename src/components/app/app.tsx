@@ -59,7 +59,7 @@ export const App = (): React.JSX.Element => {
       ) : (
         <main className={`${styles.main} pl-5 pr-5 text text_type_main-default`}>
           <BurgerIngredients ingredients={ingredients} />
-          <BurgerConstructor ingredients={ingredients} />
+          <BurgerConstructor chosenIngredients={ingredients} />
         </main>
       )}
     </div>

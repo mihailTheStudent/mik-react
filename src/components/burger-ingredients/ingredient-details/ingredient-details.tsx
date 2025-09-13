@@ -2,17 +2,17 @@ import { Modal } from '../../common/modal/modal';
 
 import type { TIngredient } from '@/utils/types';
 
-import styles from './modal-ingredient-details.module.css';
+import styles from './ingredient-details.module.css';
 
-type TModalIngredientDetails = {
+type TIngredientDetails = {
   ingredient: TIngredient;
-  onClose?: () => void;
+  onClose: () => void;
 };
 
-export const ModalIngredientDetails = ({
+export const IngredientDetails = ({
   ingredient,
   onClose,
-}: TModalIngredientDetails): React.JSX.Element => {
+}: TIngredientDetails): React.JSX.Element => {
   const { image_large, name, calories, proteins, fat, carbohydrates } = ingredient;
 
   return (

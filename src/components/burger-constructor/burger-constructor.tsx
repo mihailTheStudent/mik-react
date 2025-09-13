@@ -1,43 +1,47 @@
+import { ConstructorElement } from '@krgaa/react-developer-burger-ui-components';
+import { useLayoutEffect, useState } from 'react';
+
 import { BurgerOrder } from './burger-order/burger-order';
-import { BurgerStructureItem } from './burger-structure-item/burger-structure-item';
 
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-constructor.module.css';
 
 type TBurgerConstructorProps = {
-  ingredients: TIngredient[];
+  chosenIngredients: TIngredient[];
 };
 
-const getBunIndex = (ingredients: TIngredient[]): number =>
-  ingredients.findIndex((ingredient) => ingredient.type === 'bun');
-
 export const BurgerConstructor = ({
-  ingredients,
+  chosenIngredients,
 }: TBurgerConstructorProps): React.JSX.Element => {
-  const bunIndex = getBunIndex(ingredients);
-  const bun = ingredients[bunIndex];
-  const otherIngredients = ingredients
-    .slice(0, bunIndex)
-    .concat(ingredients.slice(bunIndex + 1));
-  // if (getBunIndex(otherIngredients) !== -1) {
-  //   throw new Error('Булка может быть только одна!');
-  // }
+  const [ingredients, setIngredients] = useState<TIngredient[]>([]);
 
-  const burgerItems = [bun, ...otherIngredients, bun];
+  useLayoutEffect(() => {
+    let ingredientsList: TIngredient[] = [];
+    if (chosenIngredients?.length > 0) {
+      const bun = chosenIngredients.find((ingredient) => ingredient.type === 'bun');
+      const otherIngredients = chosenIngredients.filter(
+        (ingredient) => ingredient.type !== 'bun'
+      );
+      ingredientsList = bun ? [bun, ...otherIngredients, bun] : otherIngredients;
+    }
+    setIngredients(ingredientsList);
+  }, [chosenIngredients]);
 
   return (
     <section className={`${styles.burger_constructor} pt-4 pl-4 pr-4`}>
       <div className={styles.burger_structure}>
-        {burgerItems.map((burgerItem, index) => {
+        {ingredients.map(({ name, price, image_mobile }, index) => {
           const isTopBun = index === 0;
-          const isBottomBun = index === burgerItems.length - 1;
+          const isBottomBun = index === ingredients.length - 1;
           return (
-            <BurgerStructureItem
+            <ConstructorElement
               key={index}
-              ingredient={burgerItem}
-              isTopBun={isTopBun}
-              isBottomBun={isBottomBun}
+              text={name}
+              price={price}
+              thumbnail={image_mobile}
+              isLocked={isTopBun || isBottomBun}
+              type={isTopBun ? 'top' : isBottomBun ? 'bottom' : undefined}
             />
           );
         })}

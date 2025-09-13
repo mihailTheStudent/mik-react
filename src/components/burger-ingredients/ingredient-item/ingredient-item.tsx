@@ -1,4 +1,4 @@
-import { ModalIngredientDetails } from '@/components/burger-ingredients/modal-ingredient-details/modal-ingredient-details';
+import { IngredientDetails } from '@/components/burger-ingredients/ingredient-details/ingredient-details';
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
 
@@ -39,7 +39,7 @@ export const IngredientItem = ({
         <p className={styles.name}>{name}</p>
       </article>
       {isModalVisible && (
-        <ModalIngredientDetails ingredient={ingredient} onClose={onCloseModal} />
+        <IngredientDetails ingredient={ingredient} onClose={onCloseModal} />
       )}
     </>
   );

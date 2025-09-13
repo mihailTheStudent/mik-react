@@ -1,28 +1,48 @@
 import { CloseIcon } from '@krgaa/react-developer-burger-ui-components';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 import { ModalOverlay } from '../modal-overlay/modal-overlay';
 
 import styles from './modal.module.css';
 
+const modalRoot = document.querySelector('#modal');
+
 type TModalProps = {
-  title: string;
+  title?: string;
   children: React.JSX.Element;
-  onClose?: () => void;
-  width?: number;
+  onClose: () => void;
 };
 
 export const Modal = ({
-  title,
+  title = '',
   children: modalContent,
   onClose,
-  width = 720,
 }: TModalProps): React.JSX.Element => {
-  const onCloseClickHandler = useCallback(() => close(), []);
+  const onCloseClickHandler = useCallback(() => onClose(), []);
+  const onModalOverlayClick = useCallback(() => onClose(), []);
+  const closeByEsc = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  }, []);
 
-  return (
-    <ModalOverlay onClose={onClose}>
-      <section className={styles.modal} style={{ width }}>
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', closeByEsc);
+    return (): void => {
+      document.body.style.overflow = 'unset';
+      document.removeEventListener('keydown', closeByEsc);
+    };
+  }, []);
+
+  if (!modalRoot) {
+    return <></>;
+  }
+
+  return createPortal(
+    <ModalOverlay onClick={onModalOverlayClick}>
+      <section className={styles.modal}>
         <header className={`${styles.header} pt-10 pl-10 pr-10`}>
           <h3 className="text text_type_main-large">{title}</h3>
           <CloseIcon
@@ -33,6 +53,7 @@ export const Modal = ({
         </header>
         <div className="pl-10 pr-10 pb-15">{modalContent}</div>
       </section>
-    </ModalOverlay>
+    </ModalOverlay>,
+    modalRoot
   );
 };
