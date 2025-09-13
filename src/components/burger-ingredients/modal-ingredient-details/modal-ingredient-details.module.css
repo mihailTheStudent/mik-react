@@ -1,0 +1,20 @@
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ingredient_image {
+  width: 520px;
+}
+
+.ingredient_details {
+  display: flex;
+  gap: 20px;
+}
+
+.ingredient_detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

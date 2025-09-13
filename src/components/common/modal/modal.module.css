@@ -1,0 +1,17 @@
+.modal {
+  margin: auto;
+  background-color: #1c1c21;
+  border-color: #4c4cff33;
+  border-radius: 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.close_icon {
+  cursor: pointer;
+}
