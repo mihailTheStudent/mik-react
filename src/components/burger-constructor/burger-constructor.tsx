@@ -14,39 +14,55 @@ type TBurgerConstructorProps = {
 export const BurgerConstructor = ({
   chosenIngredients,
 }: TBurgerConstructorProps): React.JSX.Element => {
-  const [ingredients, setIngredients] = useState<TIngredient[]>([]);
+  const [bun, setBun] = useState<TIngredient>();
+  const [ingredientsBetween, setIngredientsBetween] = useState<TIngredient[]>([]);
 
   useLayoutEffect(() => {
-    let ingredientsList: TIngredient[] = [];
+    let ingredientsBetweenList: TIngredient[] = [];
+    let bun: TIngredient | undefined;
     if (chosenIngredients?.length > 0) {
-      const bun = chosenIngredients.find((ingredient) => ingredient.type === 'bun');
-      const otherIngredients = chosenIngredients.filter(
+      bun = chosenIngredients.find((ingredient) => ingredient.type === 'bun');
+      ingredientsBetweenList = chosenIngredients.filter(
         (ingredient) => ingredient.type !== 'bun'
       );
-      ingredientsList = bun ? [bun, ...otherIngredients, bun] : otherIngredients;
     }
-    setIngredients(ingredientsList);
+    setBun(bun);
+    setIngredientsBetween(ingredientsBetweenList);
   }, [chosenIngredients]);
 
   return (
     <section className={`${styles.burger_constructor} pt-4 pl-4 pr-4`}>
-      <div className={styles.burger_structure}>
-        {ingredients.map(({ name, price, image_mobile }, index) => {
-          const isTopBun = index === 0;
-          const isBottomBun = index === ingredients.length - 1;
+      {bun && (
+        <ConstructorElement
+          text={`${bun.name} (верх)`}
+          price={bun.price}
+          thumbnail={bun.image_mobile}
+          isLocked={true}
+          type="top"
+        />
+      )}
+      <div className={styles.burger_ingredients_between}>
+        {ingredientsBetween.map(({ name, price, image_mobile }, index) => {
           return (
             <ConstructorElement
               key={index}
               text={name}
               price={price}
               thumbnail={image_mobile}
-              isLocked={isTopBun || isBottomBun}
-              type={isTopBun ? 'top' : isBottomBun ? 'bottom' : undefined}
             />
           );
         })}
       </div>
-      <BurgerOrder ingredients={ingredients} />
+      {bun && (
+        <ConstructorElement
+          text={`${bun.name} (низ)`}
+          price={bun.price}
+          thumbnail={bun.image_mobile}
+          isLocked={true}
+          type="bottom"
+        />
+      )}
+      <BurgerOrder ingredients={ingredientsBetween} />
     </section>
   );
 };

@@ -1,4 +1,5 @@
 import { IngredientDetails } from '@/components/burger-ingredients/ingredient-details/ingredient-details';
+import { Modal } from '@/components/common/modal/modal';
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
 
@@ -30,7 +31,7 @@ export const IngredientItem = ({
   return (
     <>
       <article className={`${styles.item} pb-4`} onClick={openModal}>
-        <img src={image} className="pl-4 pr-4" />
+        <img src={image} className="pl-4 pr-4" alt={name} />
         {count ? <Counter count={count} /> : null}
         <p className={`${styles.price} pt-1 pb-1`}>
           <span className="mr-2 text text_type_digits-default">{price}</span>
@@ -39,7 +40,9 @@ export const IngredientItem = ({
         <p className={styles.name}>{name}</p>
       </article>
       {isModalVisible && (
-        <IngredientDetails ingredient={ingredient} onClose={onCloseModal} />
+        <Modal title="Детали ингредиента" onClose={onCloseModal}>
+          <IngredientDetails ingredient={ingredient} />
+        </Modal>
       )}
     </>
   );

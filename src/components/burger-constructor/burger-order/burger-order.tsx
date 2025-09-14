@@ -1,3 +1,4 @@
+import { Modal } from '@/components/common/modal/modal';
 import { Price } from '@/components/common/price/price';
 import { Button } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
@@ -41,7 +42,11 @@ export const BurgerOrder = ({ ingredients }: TBurgerOrderProps): React.JSX.Eleme
       >
         Оформить заказ
       </Button>
-      {isBurgerModalVisible && <OrderDetails orderId="034536" onClose={onCloseModal} />}
+      {isBurgerModalVisible && (
+        <Modal onClose={onCloseModal}>
+          <OrderDetails orderId="034356" />
+        </Modal>
+      )}
     </section>
   );
 };
