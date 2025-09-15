@@ -1,5 +1,8 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 
+import { getGroupName } from '../../utils/naming-functions';
+import { IngredientsGroup } from './ingredients-group/ingredients-group';
+
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
@@ -11,11 +14,24 @@ type TBurgerIngredientsProps = {
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
-  console.log(ingredients);
+  const buns = [],
+    mains = [],
+    sauces = [];
+
+  for (const ingredient of ingredients) {
+    const type = ingredient.type;
+    if (type === 'bun') {
+      buns.push(ingredient);
+    } else if (type === 'main') {
+      mains.push(ingredient);
+    } else if (type === 'sauce') {
+      sauces.push(ingredient);
+    }
+  }
 
   return (
     <section className={styles.burger_ingredients}>
-      <nav>
+      <nav className="mb-10">
         <ul className={styles.menu}>
           <Tab
             value="bun"
@@ -24,16 +40,7 @@ export const BurgerIngredients = ({
               /* TODO */
             }}
           >
-            Булки
-          </Tab>
-          <Tab
-            value="main"
-            active={false}
-            onClick={() => {
-              /* TODO */
-            }}
-          >
-            Начинки
+            {getGroupName('bun')}
           </Tab>
           <Tab
             value="sauce"
@@ -42,10 +49,24 @@ export const BurgerIngredients = ({
               /* TODO */
             }}
           >
-            Соусы
+            {getGroupName('sauce')}
+          </Tab>
+          <Tab
+            value="main"
+            active={false}
+            onClick={() => {
+              /* TODO */
+            }}
+          >
+            {getGroupName('main')}
           </Tab>
         </ul>
       </nav>
+      <div className={`${styles.ingredients} custom-scroll`}>
+        <IngredientsGroup ingredients={buns} />
+        <IngredientsGroup ingredients={sauces} />
+        <IngredientsGroup ingredients={mains} />
+      </div>
     </section>
   );
 };

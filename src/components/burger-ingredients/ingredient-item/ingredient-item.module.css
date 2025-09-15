@@ -1,0 +1,16 @@
+.item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min-content;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  text-align: center;
+}

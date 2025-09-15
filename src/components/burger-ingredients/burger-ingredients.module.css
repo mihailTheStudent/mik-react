@@ -3,7 +3,6 @@
   flex-direction: column;
   max-width: 600px;
   color: var(--text-primary-color);
-  font-family: 'Jet Brains Mono', serif;
 }
 
 .menu {
@@ -12,4 +11,8 @@
   padding: 0;
   text-align: center;
   list-style-type: none;
+}
+
+.ingredients {
+  overflow-y: scroll;
 }

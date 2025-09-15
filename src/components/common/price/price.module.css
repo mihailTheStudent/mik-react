@@ -1,0 +1,19 @@
+.price {
+  display: flex;
+  align-items: center;
+}
+
+.price_icon_s {
+  width: 24px;
+  height: 24px;
+}
+
+.price_icon_m {
+  width: 36px;
+  height: 36px;
+}
+
+.price_icon_l {
+  width: 120px;
+  height: 120px;
+}

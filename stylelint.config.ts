@@ -17,6 +17,16 @@ const config: Config = {
         except: ['first-nested'],
       },
     ],
+    'property-no-unknown': [
+      true,
+      {
+        ignoreProperties: [
+          // CSS Modules composition
+          // https://github.com/css-modules/css-modules#composition
+          'composes',
+        ],
+      },
+    ],
     'comment-whitespace-inside': 'always',
     'declaration-block-single-line-max-declarations': 1,
     'declaration-empty-line-before': 'never',
