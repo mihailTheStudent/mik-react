@@ -1,40 +1,49 @@
 import { Modal } from '@/components/common/modal/modal';
 import { Price } from '@/components/common/price/price';
+import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
+import { burgerIngredients, clean } from '@/services/burger-constructor.store';
+import { isError, isLoading, makeOrder } from '@/services/order.store';
 import { Button } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
 
 import { OrderDetails } from '../order-details/order-details';
 
-import type { TIngredient } from '@/utils/types';
-
 import styles from './burger-order.module.css';
 
-type TBurgerOrderProps = {
-  ingredients: TIngredient[];
-};
+export const BurgerOrder = (): React.JSX.Element => {
+  const [isOrderVisible, setIsOrderVisible] = useState(false);
 
-export const BurgerOrder = ({ ingredients }: TBurgerOrderProps): React.JSX.Element => {
-  const [isBurgerModalVisible, setIsBurgerModalVisible] = useState(false);
+  const dispatch = useAppDispatch();
+  const _burgerIngredients = useAppSelector(burgerIngredients);
+  const loading = useAppSelector(isLoading);
+  const error = useAppSelector(isError);
 
-  const openModal = useCallback(() => {
-    setIsBurgerModalVisible(true);
-  }, []);
   const onCloseModal = useCallback(() => {
-    setIsBurgerModalVisible(false);
-  }, []);
-  const onOrderSubmitHandler = useCallback(() => {
-    openModal();
+    if (loading) {
+      return;
+    }
+    setIsOrderVisible(false);
+    if (!error) {
+      dispatch(clean());
+    }
   }, []);
 
-  const totalPrice: number = ingredients.reduce(
-    (sum, ingredient) => (sum += ingredient.price),
-    0
-  );
+  const onOrderSubmitHandler = useCallback(() => {
+    void dispatch(makeOrder(_burgerIngredients.map((i) => i._id)));
+    setIsOrderVisible(true);
+  }, [_burgerIngredients]);
+
+  const getTotalPrice = useCallback(() => {
+    return _burgerIngredients.reduce((sum, ingredient) => (sum += ingredient.price), 0);
+  }, [_burgerIngredients]);
+
+  const totalPrice = getTotalPrice();
 
   return (
-    <section className={`${styles.order} mt-10`}>
+    <section className={styles.order}>
       <Price price={totalPrice} size="m" />
       <Button
+        disabled={loading}
         type="primary"
         htmlType="submit"
         extraClass="ml-10"
@@ -42,9 +51,9 @@ export const BurgerOrder = ({ ingredients }: TBurgerOrderProps): React.JSX.Eleme
       >
         Оформить заказ
       </Button>
-      {isBurgerModalVisible && (
+      {isOrderVisible && (
         <Modal onClose={onCloseModal}>
-          <OrderDetails orderId="034356" />
+          <OrderDetails />
         </Modal>
       )}
     </section>

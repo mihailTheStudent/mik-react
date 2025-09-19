@@ -9,7 +9,7 @@ type TGetIngredientsReponse = {
   success: boolean;
 };
 
-export function getIngredients(): Promise<TIngredient[]> {
+export function getIngredientsApi(): Promise<TIngredient[]> {
   return fetch(GET_INGREDIENTS_URL)
     .then((response) => {
       if (response.ok) {

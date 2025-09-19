@@ -1,33 +1,34 @@
+import { useAppSelector } from '@/hooks/store-hooks';
+import { ingredients } from '@/services/ingredients.store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
+import { useCallback } from 'react';
 
 import { getGroupName } from '../../utils/naming-functions';
 import { IngredientsGroup } from './ingredients-group/ingredients-group';
 
-import type { TIngredient } from '@utils/types';
-
 import styles from './burger-ingredients.module.css';
 
-type TBurgerIngredientsProps = {
-  ingredients: TIngredient[];
-};
+export const BurgerIngredients = (): React.JSX.Element => {
+  const _ingredients = useAppSelector(ingredients);
 
-export const BurgerIngredients = ({
-  ingredients,
-}: TBurgerIngredientsProps): React.JSX.Element => {
-  const buns = [],
-    mains = [],
-    sauces = [];
-
-  for (const ingredient of ingredients) {
-    const type = ingredient.type;
-    if (type === 'bun') {
-      buns.push(ingredient);
-    } else if (type === 'main') {
-      mains.push(ingredient);
-    } else if (type === 'sauce') {
-      sauces.push(ingredient);
+  const sortIngredients = useCallback(() => {
+    const buns = [],
+      mains = [],
+      sauces = [];
+    for (const ingredient of _ingredients) {
+      const type = ingredient.type;
+      if (type === 'bun') {
+        buns.push(ingredient);
+      } else if (type === 'main') {
+        mains.push(ingredient);
+      } else if (type === 'sauce') {
+        sauces.push(ingredient);
+      }
     }
-  }
+    return { buns, mains, sauces };
+  }, [_ingredients]);
+
+  const { buns, mains, sauces } = sortIngredients();
 
   return (
     <section className={styles.burger_ingredients}>

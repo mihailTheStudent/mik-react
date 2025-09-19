@@ -1,9 +1,11 @@
 .burger_constructor {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  box-sizing: border-box;
   width: 600px;
-  padding-bottom: 20px;
+  padding-bottom: 156px;
   color: var(--text-primary-color);
 }
 
@@ -11,5 +13,16 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow-y: scroll;
+  overflow-y: auto;
+}
+
+.burger_ingredient {
+  min-height: 80px;
+  max-height: 80px;
+}
+
+.total_price {
+  position: absolute;
+  right: 16px;
+  bottom: 52px;
 }

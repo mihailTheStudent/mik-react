@@ -11,6 +11,23 @@
   align-items: center;
 }
 
+.image {
+  background-color: transparent;
+  border-radius: 20px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #212127;
+    transition: background-color 0.5s;
+  }
+}
+
 .name {
   text-align: center;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(167 217 255);
+  }
 }

@@ -1,39 +1,33 @@
+import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
+import {
+  burgerIngredients,
+  isBunChosen,
+  removeIngredient,
+} from '@/services/burger-constructor.store';
 import { ConstructorElement } from '@krgaa/react-developer-burger-ui-components';
-import { useLayoutEffect, useState } from 'react';
+import { useCallback } from 'react';
 
 import { BurgerOrder } from './burger-order/burger-order';
 
-import type { TIngredient } from '@utils/types';
+import type { TIngredient } from '@/utils/types';
 
 import styles from './burger-constructor.module.css';
 
-type TBurgerConstructorProps = {
-  chosenIngredients: TIngredient[];
-};
+export const BurgerConstructor = (): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const _removeIngredient = useCallback((ingredient: TIngredient) => {
+    dispatch(removeIngredient({ ingredient }));
+  }, []);
 
-export const BurgerConstructor = ({
-  chosenIngredients,
-}: TBurgerConstructorProps): React.JSX.Element => {
-  const [bun, setBun] = useState<TIngredient>();
-  const [ingredientsBetween, setIngredientsBetween] = useState<TIngredient[]>([]);
-
-  useLayoutEffect(() => {
-    let ingredientsBetweenList: TIngredient[] = [];
-    let bun: TIngredient | undefined;
-    if (chosenIngredients?.length > 0) {
-      bun = chosenIngredients.find((ingredient) => ingredient.type === 'bun');
-      ingredientsBetweenList = chosenIngredients.filter(
-        (ingredient) => ingredient.type !== 'bun'
-      );
-    }
-    setBun(bun);
-    setIngredientsBetween(ingredientsBetweenList);
-  }, [chosenIngredients]);
+  const _burgerIngredients = useAppSelector(burgerIngredients);
+  const hasBun = useAppSelector(isBunChosen);
+  const bun = hasBun ? _burgerIngredients[0] : null;
 
   return (
     <section className={`${styles.burger_constructor} pt-4 pl-4 pr-4`}>
       {bun && (
         <ConstructorElement
+          extraClass={styles.burger_ingredient}
           text={`${bun.name} (верх)`}
           price={bun.price}
           thumbnail={bun.image_mobile}
@@ -42,19 +36,25 @@ export const BurgerConstructor = ({
         />
       )}
       <div className={styles.burger_ingredients_between}>
-        {ingredientsBetween.map(({ name, price, image_mobile }, index) => {
-          return (
-            <ConstructorElement
-              key={index}
-              text={name}
-              price={price}
-              thumbnail={image_mobile}
-            />
-          );
-        })}
+        {(hasBun ? _burgerIngredients.slice(1, -1) : _burgerIngredients).map(
+          (ingredient, index) => {
+            const { name, price, image_mobile } = ingredient;
+            return (
+              <ConstructorElement
+                extraClass={styles.burger_ingredient}
+                key={index}
+                text={name}
+                price={price}
+                thumbnail={image_mobile}
+                handleClose={() => _removeIngredient(ingredient)}
+              />
+            );
+          }
+        )}
       </div>
       {bun && (
         <ConstructorElement
+          extraClass={styles.burger_ingredient}
           text={`${bun.name} (низ)`}
           price={bun.price}
           thumbnail={bun.image_mobile}
@@ -62,7 +62,9 @@ export const BurgerConstructor = ({
           type="bottom"
         />
       )}
-      <BurgerOrder ingredients={ingredientsBetween} />
+      <div className={styles.total_price}>
+        <BurgerOrder />
+      </div>
     </section>
   );
 };

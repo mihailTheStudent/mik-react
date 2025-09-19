@@ -18,3 +18,8 @@ export type TIngredientType = 'bun' | 'sauce' | 'main';
 export type TCommonProps = {
   extraClass?: string;
 };
+
+export type TOrder = {
+  name: string;
+  number: number;
+};

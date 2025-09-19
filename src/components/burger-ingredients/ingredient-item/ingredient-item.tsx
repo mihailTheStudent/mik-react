@@ -1,7 +1,14 @@
 import { IngredientDetails } from '@/components/burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '@/components/common/modal/modal';
+import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
+import { addIngredient, ingredientsCount } from '@/services/burger-constructor.store';
+import {
+  select,
+  selectedIngredient,
+  unselect,
+} from '@/services/selected-ingredient.store';
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 import type { TIngredient } from '@/utils/types';
 
@@ -9,39 +16,50 @@ import styles from './ingredient-item.module.css';
 
 type TBurgerIngredientItemProps = {
   ingredient: TIngredient;
-  count?: number;
 };
 
 export const IngredientItem = ({
   ingredient,
-  count,
 }: TBurgerIngredientItemProps): React.JSX.Element => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const dispatch = useAppDispatch();
+  const isDetailsVisible = useAppSelector(selectedIngredient)?._id === ingredient._id;
+  const count = useAppSelector(ingredientsCount)(ingredient._id);
 
   const { name, price, image } = ingredient;
 
-  const openModal = useCallback(() => {
-    setIsModalVisible(true);
-  }, []);
+  const _addIngredient = useCallback(() => {
+    dispatch(addIngredient({ ingredient }));
+  }, [ingredient]);
+
+  const selectIngredientToCheckDetails = useCallback(() => {
+    dispatch(select({ ingredient }));
+  }, [ingredient]);
 
   const onCloseModal = useCallback(() => {
-    setIsModalVisible(false);
+    dispatch(unselect());
   }, []);
 
   return (
     <>
-      <article className={`${styles.item} pb-4`} onClick={openModal}>
-        <img src={image} className="pl-4 pr-4" alt={name} />
+      <article className={`${styles.item} pb-4`}>
+        <img
+          src={image}
+          className={`${styles.image} pl-4 pr-4`}
+          alt={name}
+          onClick={_addIngredient}
+        />
         {count ? <Counter count={count} /> : null}
         <p className={`${styles.price} pt-1 pb-1`}>
           <span className="mr-2 text text_type_digits-default">{price}</span>
           <CurrencyIcon type="primary" />
         </p>
-        <p className={styles.name}>{name}</p>
+        <p className={styles.name} onClick={selectIngredientToCheckDetails}>
+          {name}
+        </p>
       </article>
-      {isModalVisible && (
+      {isDetailsVisible && (
         <Modal title="Детали ингредиента" onClose={onCloseModal}>
-          <IngredientDetails ingredient={ingredient} />
+          <IngredientDetails />
         </Modal>
       )}
     </>

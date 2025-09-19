@@ -28,5 +28,3 @@ export const IngredientsGroup = ({
     </section>
   );
 };
-
-// TODO - add somehow propTypes to check if all ingredients are in the same group
