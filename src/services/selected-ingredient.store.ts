@@ -1,15 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { TIngredient } from '@/utils/types';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 type TSelectedIngredientStore = {
   ingredient: TIngredient | null;
 };
 
 type TSelectIngredintAction = {
-  payload: {
-    ingredient: TIngredient;
-  };
+  ingredient: TIngredient;
 };
 
 const initialState: TSelectedIngredientStore = {
@@ -23,7 +22,7 @@ export const selectedIngredientSlice = createSlice({
     selectedIngredient: (store) => store.ingredient,
   },
   reducers: {
-    select: (state, action: TSelectIngredintAction) => {
+    select: (state, action: PayloadAction<TSelectIngredintAction>) => {
       state.ingredient = action.payload.ingredient;
     },
     unselect: (state) => {

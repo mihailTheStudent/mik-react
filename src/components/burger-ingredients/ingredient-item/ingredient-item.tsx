@@ -23,7 +23,7 @@ export const IngredientItem = ({
 }: TBurgerIngredientItemProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const isDetailsVisible = useAppSelector(selectedIngredient)?._id === ingredient._id;
-  const count = useAppSelector(ingredientsCount)(ingredient._id);
+  const count = useAppSelector(ingredientsCount)[ingredient._id];
 
   const { name, price, image } = ingredient;
 

@@ -19,8 +19,14 @@ export type TMakeOrderRequest = TIngredient['_id'][];
 const POST_MAKE_ORDER_URL = 'https://norma.nomoreparties.space/api/orders';
 
 export function makeOrderApi(ingredients: TMakeOrderRequest): Promise<TOrder> {
-  const body: TMakeOrderBody = { ingredients };
-  return fetch(POST_MAKE_ORDER_URL, { method: 'POST', body: JSON.stringify(body) })
+  const body: TMakeOrderBody = { ingredients: ingredients };
+  return fetch(POST_MAKE_ORDER_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(body),
+  })
     .then((response) => {
       if (response.ok) {
         return response.json();

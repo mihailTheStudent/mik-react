@@ -2,7 +2,12 @@ import { Modal } from '@/components/common/modal/modal';
 import { Price } from '@/components/common/price/price';
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
 import { burgerIngredients, clean } from '@/services/burger-constructor.store';
-import { isError, isLoading, makeOrder } from '@/services/order.store';
+import {
+  isError,
+  isLoading,
+  makeOrder,
+  clean as cleanOrder,
+} from '@/services/order.store';
 import { Button } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useState } from 'react';
 
@@ -25,6 +30,7 @@ export const BurgerOrder = (): React.JSX.Element => {
     setIsOrderVisible(false);
     if (!error) {
       dispatch(clean());
+      dispatch(cleanOrder());
     }
   }, []);
 

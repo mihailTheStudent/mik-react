@@ -32,7 +32,9 @@ export const orderSlice = createSlice({
     isError: (store) => store.isError,
     order: (store) => store.order,
   },
-  reducers: {},
+  reducers: {
+    clean: () => initialState,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(makeOrder.pending, (state) => {
@@ -51,3 +53,4 @@ export const orderSlice = createSlice({
 });
 
 export const { isLoading, isError, order } = orderSlice.selectors;
+export const { clean } = orderSlice.actions;

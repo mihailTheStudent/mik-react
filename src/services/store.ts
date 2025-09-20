@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { burgerConstructorSlice } from './burger-constructor.store';
 import { ingredientsSlice } from './ingredients.store';
+import { isTabActiveSlice } from './is-tab-active.store';
 import { orderSlice } from './order.store';
 import { selectedIngredientSlice } from './selected-ingredient.store';
 
@@ -12,6 +13,7 @@ const rootReducer: Record<string, Reducer> = {
   [ingredientsSlice.reducerPath]: ingredientsSlice.reducer,
   [orderSlice.reducerPath]: orderSlice.reducer,
   [selectedIngredientSlice.reducerPath]: selectedIngredientSlice.reducer,
+  [isTabActiveSlice.reducerPath]: isTabActiveSlice.reducer,
 };
 
 export const store = configureStore({

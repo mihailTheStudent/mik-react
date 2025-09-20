@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import type { TIngredient } from '@/utils/types';
-import type { WritableDraft } from '@reduxjs/toolkit';
+import type { PayloadAction, WritableDraft } from '@reduxjs/toolkit';
 
 type TBurgerConstructorStore = {
   burgerIngredients: TIngredient[];
@@ -9,10 +9,8 @@ type TBurgerConstructorStore = {
 };
 
 type TIngredientChangeAction = {
-  payload: {
-    ingredient: TIngredient;
-    index?: number;
-  };
+  ingredient: TIngredient;
+  index?: number;
 };
 
 type TIngredientChangeCount = {
@@ -41,13 +39,10 @@ export const burgerConstructorSlice = createSlice({
   selectors: {
     burgerIngredients: (store) => store.burgerIngredients,
     isBunChosen: (store) => store.burgerIngredients.some((i) => i.type === 'bun'),
-    ingredientsCount:
-      (store) =>
-      (id: string): number =>
-        store.ingredientsCount[id],
+    ingredientsCount: (store) => store.ingredientsCount,
   },
   reducers: {
-    addIngredient: (state, action: TIngredientChangeAction) => {
+    addIngredient: (state, action: PayloadAction<TIngredientChangeAction>) => {
       const { ingredient, index = state.burgerIngredients.length - 1 } = action.payload;
       if (ingredient.type === 'bun') {
         if (burgerConstructorSlice.selectors.isBunChosen.unwrapped(state)) {
@@ -63,7 +58,7 @@ export const burgerConstructorSlice = createSlice({
         changeIngredientCount(state, { ingredient, change: 1 });
       }
     },
-    removeIngredient: (state, action: TIngredientChangeAction) => {
+    removeIngredient: (state, action: PayloadAction<TIngredientChangeAction>) => {
       const {
         ingredient,
         index = state.burgerIngredients.findIndex((i) => i._id === ingredient._id),
@@ -74,9 +69,7 @@ export const burgerConstructorSlice = createSlice({
       state.burgerIngredients.splice(index, 1);
       changeIngredientCount(state, { ingredient, change: -1 });
     },
-    clean: (_state) => {
-      _state = initialState;
-    },
+    clean: () => initialState,
   },
 });
 

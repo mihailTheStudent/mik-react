@@ -1,14 +1,67 @@
-import { useAppSelector } from '@/hooks/store-hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
 import { ingredients } from '@/services/ingredients.store';
+import { activeTab, calculateActiveTab } from '@/services/is-tab-active.store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { getGroupName } from '../../utils/naming-functions';
 import { IngredientsGroup } from './ingredients-group/ingredients-group';
 
+import type { TDOMRectTopBottomBorders } from '@/services/is-tab-active.store';
+import type { TIngredientType } from '@/utils/types';
+
 import styles from './burger-ingredients.module.css';
 
 export const BurgerIngredients = (): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const ingredientsEl = useRef<HTMLDivElement>(null);
+  const bunsEl = useRef<HTMLElement>(null);
+  const mainsEl = useRef<HTMLElement>(null);
+  const saucesEl = useRef<HTMLElement>(null);
+
+  const handleOnScroll = useCallback(() => {
+    const parent = getCoords(ingredientsEl.current);
+    const bun = getCoords(bunsEl.current);
+    const main = getCoords(mainsEl.current);
+    const sauce = getCoords(saucesEl.current);
+    dispatch(calculateActiveTab({ parent, tabs: { bun, main, sauce } }));
+  }, []);
+
+  const getCoords = useCallback(
+    (coords: HTMLElement | HTMLDivElement | null): TDOMRectTopBottomBorders => {
+      const { top, bottom } = coords?.getBoundingClientRect() ?? { top: 0, bottom: 0 };
+      return { top, bottom };
+    },
+    []
+  );
+
+  useEffect(() => {
+    handleOnScroll();
+  }, [ingredientsEl, bunsEl, mainsEl, saucesEl]);
+
+  const handleScrollTo = useCallback((scrollTo: TIngredientType) => {
+    const scrollableContainer = ingredientsEl.current;
+
+    if (scrollableContainer) {
+      const elementToScroll =
+        scrollTo === 'bun'
+          ? bunsEl.current
+          : scrollTo === 'main'
+            ? mainsEl.current
+            : scrollTo === 'sauce'
+              ? saucesEl.current
+              : null;
+      const distance =
+        getCoords(elementToScroll).top - getCoords(scrollableContainer).top;
+      scrollableContainer.scroll({
+        top: distance,
+        behavior: 'smooth',
+      });
+    }
+  }, []);
+
+  const _activeTab = useAppSelector(activeTab);
+
   const _ingredients = useAppSelector(ingredients);
 
   const sortIngredients = useCallback(() => {
@@ -36,37 +89,35 @@ export const BurgerIngredients = (): React.JSX.Element => {
         <ul className={styles.menu}>
           <Tab
             value="bun"
-            active={true}
-            onClick={() => {
-              /* TODO */
-            }}
+            active={_activeTab === 'bun'}
+            onClick={() => handleScrollTo('bun')}
           >
             {getGroupName('bun')}
           </Tab>
           <Tab
             value="sauce"
-            active={false}
-            onClick={() => {
-              /* TODO */
-            }}
+            active={_activeTab === 'sauce'}
+            onClick={() => handleScrollTo('sauce')}
           >
             {getGroupName('sauce')}
           </Tab>
           <Tab
             value="main"
-            active={false}
-            onClick={() => {
-              /* TODO */
-            }}
+            active={_activeTab === 'main'}
+            onClick={() => handleScrollTo('main')}
           >
             {getGroupName('main')}
           </Tab>
         </ul>
       </nav>
-      <div className={`${styles.ingredients} custom-scroll`}>
-        <IngredientsGroup ingredients={buns} />
-        <IngredientsGroup ingredients={sauces} />
-        <IngredientsGroup ingredients={mains} />
+      <div
+        className={`${styles.ingredients} custom-scroll`}
+        ref={ingredientsEl}
+        onScroll={handleOnScroll}
+      >
+        <IngredientsGroup ingredients={buns} ref={bunsEl} />
+        <IngredientsGroup ingredients={sauces} ref={saucesEl} />
+        <IngredientsGroup ingredients={mains} ref={mainsEl} />
       </div>
     </section>
   );
