@@ -5,7 +5,7 @@ import {
   removeIngredient,
   setDraggableItem,
   draggableItem,
-} from '@/services/burger-constructor.store';
+} from '@/services/store/burger-constructor.store';
 import { INGREDIENT_SORT } from '@/utils/dnd.const';
 import {
   ConstructorElement,
@@ -35,8 +35,8 @@ export const ConstructorElementWrapper = ({
     if (ingredient.type === 'bun') {
       return;
     }
-    dispatch(removeIngredient({ ingredient }));
-  }, []);
+    dispatch(removeIngredient(index));
+  }, [index]);
 
   const typeValue =
     type === 'bun-top' ? 'top' : type === 'bun-bottom' ? 'bottom' : undefined;

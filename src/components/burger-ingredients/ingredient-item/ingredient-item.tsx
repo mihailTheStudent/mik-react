@@ -1,12 +1,15 @@
 import { IngredientDetails } from '@/components/burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '@/components/common/modal/modal';
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
-import { addIngredient, ingredientsCount } from '@/services/burger-constructor.store';
+import {
+  addIngredient,
+  ingredientsCount,
+} from '@/services/store/burger-constructor.store';
 import {
   select,
   selectedIngredient,
   unselect,
-} from '@/services/selected-ingredient.store';
+} from '@/services/store/selected-ingredient.store';
 import { INGREDIENT_ADD } from '@/utils/dnd.const';
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback } from 'react';

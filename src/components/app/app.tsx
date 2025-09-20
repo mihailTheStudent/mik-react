@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
-import { getIngredients, isError, isLoading } from '@/services/ingredients.store';
+import { getIngredients, isError, isLoading } from '@/services/store/ingredients.store';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useLayoutEffect } from 'react';
 

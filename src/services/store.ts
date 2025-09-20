@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import { burgerConstructorSlice } from './burger-constructor.store';
-import { ingredientsSlice } from './ingredients.store';
-import { isTabActiveSlice } from './is-tab-active.store';
-import { orderSlice } from './order.store';
-import { selectedIngredientSlice } from './selected-ingredient.store';
+import { burgerConstructorSlice } from './store/burger-constructor.store';
+import { ingredientsSlice } from './store/ingredients.store';
+import { isTabActiveSlice } from './store/is-tab-active.store';
+import { orderSlice } from './store/order.store';
+import { selectedIngredientSlice } from './store/selected-ingredient.store';
 
 import type { Reducer } from '@reduxjs/toolkit';
 

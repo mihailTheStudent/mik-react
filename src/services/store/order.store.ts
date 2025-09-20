@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { makeOrderApi } from './order.service';
+import { makeOrderApi } from '../order.service';
 
-import type { TMakeOrderRequest } from './order.service';
+import type { TMakeOrderRequest } from '../order.service';
 import type { TOrder } from '@/utils/types';
 
 type TOrderStore = {

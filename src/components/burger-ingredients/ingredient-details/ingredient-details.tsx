@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/hooks/store-hooks';
-import { selectedIngredient } from '@/services/selected-ingredient.store';
+import { selectedIngredient } from '@/services/store/selected-ingredient.store';
 
 import styles from './ingredient-details.module.css';
 

@@ -69,11 +69,9 @@ export const burgerConstructorSlice = createSlice({
         changeIngredientCount(state, { ingredient, change: 1 });
       }
     },
-    removeIngredient: (state, action: PayloadAction<TIngredientChangeAction>) => {
-      const {
-        ingredient,
-        index = state.burgerIngredients.findIndex((i) => i._id === ingredient._id),
-      } = action.payload;
+    removeIngredient: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      const ingredient = state.burgerIngredients[index];
       if (ingredient.type === 'bun') {
         return;
       }

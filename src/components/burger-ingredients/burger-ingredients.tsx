@@ -1,13 +1,13 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
-import { ingredients } from '@/services/ingredients.store';
-import { activeTab, calculateActiveTab } from '@/services/is-tab-active.store';
+import { ingredients } from '@/services/store/ingredients.store';
+import { activeTab, calculateActiveTab } from '@/services/store/is-tab-active.store';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useEffect, useRef } from 'react';
 
 import { getGroupName } from '../../utils/naming-functions';
 import { IngredientsGroup } from './ingredients-group/ingredients-group';
 
-import type { TDOMRectTopBottomBorders } from '@/services/is-tab-active.store';
+import type { TDOMRectTopBottomBorders } from '@/services/store/is-tab-active.store';
 import type { TIngredientType } from '@/utils/types';
 
 import styles from './burger-ingredients.module.css';

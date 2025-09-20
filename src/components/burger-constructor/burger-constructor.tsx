@@ -4,7 +4,7 @@ import {
   burgerIngredients,
   draggingCache,
   isBunChosen,
-} from '@/services/burger-constructor.store';
+} from '@/services/store/burger-constructor.store';
 import { INGREDIENT_ADD } from '@/utils/dnd.const';
 import { useCallback } from 'react';
 import { useDrop } from 'react-dnd';

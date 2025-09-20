@@ -1,5 +1,5 @@
 import { useAppSelector } from '@/hooks/store-hooks';
-import { isError, isLoading, order } from '@/services/order.store';
+import { isError, isLoading, order } from '@/services/store/order.store';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { ReactSVG } from 'react-svg';
 
