@@ -16,11 +16,6 @@
   overflow-y: auto;
 }
 
-.burger_ingredient {
-  min-height: 80px;
-  max-height: 80px;
-}
-
 .total_price {
   position: absolute;
   right: 16px;

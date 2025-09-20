@@ -7,9 +7,12 @@ import {
   selectedIngredient,
   unselect,
 } from '@/services/selected-ingredient.store';
+import { INGREDIENT_ADD } from '@/utils/dnd.const';
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback } from 'react';
+import { useDrag } from 'react-dnd';
 
+import type { TIngredientAddItem } from '@/utils/dnd.const';
 import type { TIngredient } from '@/utils/types';
 
 import styles from './ingredient-item.module.css';
@@ -24,6 +27,14 @@ export const IngredientItem = ({
   const dispatch = useAppDispatch();
   const isDetailsVisible = useAppSelector(selectedIngredient)?._id === ingredient._id;
   const count = useAppSelector(ingredientsCount)[ingredient._id];
+
+  const [, dragRef] = useDrag<TIngredientAddItem>(
+    () => ({
+      type: INGREDIENT_ADD,
+      item: { ingredient },
+    }),
+    []
+  );
 
   const { name, price, image } = ingredient;
 
@@ -41,7 +52,12 @@ export const IngredientItem = ({
 
   return (
     <>
-      <article className={`${styles.item} pb-4`}>
+      <article
+        className={`${styles.item} pb-4`}
+        ref={(ref) => {
+          dragRef(ref);
+        }}
+      >
         <img
           src={image}
           className={`${styles.image} pl-4 pr-4`}

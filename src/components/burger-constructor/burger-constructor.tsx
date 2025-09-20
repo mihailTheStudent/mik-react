@@ -1,66 +1,74 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
 import {
+  addIngredient,
   burgerIngredients,
+  draggingCache,
   isBunChosen,
-  removeIngredient,
 } from '@/services/burger-constructor.store';
-import { ConstructorElement } from '@krgaa/react-developer-burger-ui-components';
+import { INGREDIENT_ADD } from '@/utils/dnd.const';
 import { useCallback } from 'react';
+import { useDrop } from 'react-dnd';
 
 import { BurgerOrder } from './burger-order/burger-order';
+import { ConstructorElementWrapper } from './constructor-element-wrapper/constructor-element-wrapper';
 
+import type { TIngredientAddItem } from '@/utils/dnd.const';
 import type { TIngredient } from '@/utils/types';
 
 import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
-  const _removeIngredient = useCallback((ingredient: TIngredient) => {
-    dispatch(removeIngredient({ ingredient }));
+  const _addIngredient = useCallback((ingredient: TIngredient) => {
+    dispatch(addIngredient({ ingredient }));
   }, []);
 
+  const [, addDropRef] = useDrop<TIngredientAddItem>(
+    () => ({
+      accept: INGREDIENT_ADD,
+      drop({ ingredient }): void {
+        _addIngredient(ingredient);
+      },
+    }),
+    []
+  );
+
+  const _draggingCache = useAppSelector(draggingCache);
   const _burgerIngredients = useAppSelector(burgerIngredients);
+  const ingredients = _draggingCache ?? _burgerIngredients;
+
   const hasBun = useAppSelector(isBunChosen);
-  const bun = hasBun ? _burgerIngredients[0] : null;
+  const bun = hasBun ? ingredients[0] : null;
 
   return (
-    <section className={`${styles.burger_constructor} pt-4 pl-4 pr-4`}>
+    <section
+      className={`${styles.burger_constructor} pt-4 pl-4`}
+      ref={(ref) => {
+        addDropRef(ref);
+      }}
+    >
       {bun && (
-        <ConstructorElement
-          extraClass={styles.burger_ingredient}
-          text={`${bun.name} (верх)`}
-          price={bun.price}
-          thumbnail={bun.image_mobile}
-          isLocked={true}
-          type="top"
-        />
+        <div className="pr-4">
+          <ConstructorElementWrapper ingredient={bun} type="bun-top" index={0} />
+        </div>
       )}
-      <div className={styles.burger_ingredients_between}>
-        {(hasBun ? _burgerIngredients.slice(1, -1) : _burgerIngredients).map(
-          (ingredient, index) => {
-            const { name, price, image_mobile } = ingredient;
-            return (
-              <ConstructorElement
-                extraClass={styles.burger_ingredient}
-                key={index}
-                text={name}
-                price={price}
-                thumbnail={image_mobile}
-                handleClose={() => _removeIngredient(ingredient)}
-              />
-            );
-          }
-        )}
+      <div className={`${styles.burger_ingredients_between} custom-scroll`}>
+        {(hasBun ? ingredients.slice(1, -1) : ingredients).map((ingredient, index) => (
+          <ConstructorElementWrapper
+            ingredient={ingredient}
+            key={index}
+            index={index + 1}
+          />
+        ))}
       </div>
       {bun && (
-        <ConstructorElement
-          extraClass={styles.burger_ingredient}
-          text={`${bun.name} (низ)`}
-          price={bun.price}
-          thumbnail={bun.image_mobile}
-          isLocked={true}
-          type="bottom"
-        />
+        <div className="pr-4">
+          <ConstructorElementWrapper
+            ingredient={bun}
+            type="bun-bottom"
+            index={ingredients.length - 1}
+          />
+        </div>
       )}
       <div className={styles.total_price}>
         <BurgerOrder />

@@ -43,7 +43,7 @@ export const BurgerIngredients = (): React.JSX.Element => {
     const scrollableContainer = ingredientsEl.current;
 
     if (scrollableContainer) {
-      const elementToScroll =
+      const toElementScroll =
         scrollTo === 'bun'
           ? bunsEl.current
           : scrollTo === 'main'
@@ -52,9 +52,9 @@ export const BurgerIngredients = (): React.JSX.Element => {
               ? saucesEl.current
               : null;
       const distance =
-        getCoords(elementToScroll).top - getCoords(scrollableContainer).top;
+        getCoords(toElementScroll).top - getCoords(scrollableContainer).top;
       scrollableContainer.scroll({
-        top: distance,
+        top: scrollableContainer.scrollTop + distance,
         behavior: 'smooth',
       });
     }

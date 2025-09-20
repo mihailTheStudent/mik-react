@@ -5,6 +5,8 @@ import type { PayloadAction, WritableDraft } from '@reduxjs/toolkit';
 
 type TBurgerConstructorStore = {
   burgerIngredients: TIngredient[];
+  draggingCache: TIngredient[] | null;
+  draggingItem: number;
   ingredientsCount: Record<string, number>;
 };
 
@@ -18,8 +20,15 @@ type TIngredientChangeCount = {
   change: number;
 };
 
+type TIngredientChangePlaceAction = {
+  index: number;
+  newIndex: number;
+};
+
 const initialState: TBurgerConstructorStore = {
   burgerIngredients: [],
+  draggingCache: null,
+  draggingItem: -1,
   ingredientsCount: {},
 };
 
@@ -38,6 +47,8 @@ export const burgerConstructorSlice = createSlice({
   initialState,
   selectors: {
     burgerIngredients: (store) => store.burgerIngredients,
+    draggingCache: (store) => store.draggingCache,
+    draggableItem: (store) => store.draggingItem,
     isBunChosen: (store) => store.burgerIngredients.some((i) => i.type === 'bun'),
     ingredientsCount: (store) => store.ingredientsCount,
   },
@@ -69,10 +80,43 @@ export const burgerConstructorSlice = createSlice({
       state.burgerIngredients.splice(index, 1);
       changeIngredientCount(state, { ingredient, change: -1 });
     },
+    applyDragging: (state, action: PayloadAction<boolean>) => {
+      const isApplied = action.payload;
+      if (isApplied) {
+        state.burgerIngredients = state.draggingCache!;
+      }
+      state.draggingCache = null;
+      state.draggingItem = -1;
+    },
+    changeIngredientPlace: (
+      state,
+      action: PayloadAction<TIngredientChangePlaceAction>
+    ) => {
+      const { index, newIndex } = action.payload;
+      const ingredients = [...state.burgerIngredients];
+      const ingredient = ingredients.splice(index, 1)[0];
+      ingredients.splice(newIndex, 0, ingredient);
+      state.draggingCache = ingredients;
+    },
+    setDraggableItem: (state, action: PayloadAction<number>) => {
+      state.draggingItem = action.payload;
+    },
     clean: () => initialState,
   },
 });
 
-export const { burgerIngredients, isBunChosen, ingredientsCount } =
-  burgerConstructorSlice.selectors;
-export const { addIngredient, removeIngredient, clean } = burgerConstructorSlice.actions;
+export const {
+  burgerIngredients,
+  draggingCache,
+  isBunChosen,
+  ingredientsCount,
+  draggableItem,
+} = burgerConstructorSlice.selectors;
+export const {
+  addIngredient,
+  removeIngredient,
+  changeIngredientPlace,
+  applyDragging,
+  setDraggableItem,
+  clean,
+} = burgerConstructorSlice.actions;
