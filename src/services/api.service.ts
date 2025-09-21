@@ -15,5 +15,8 @@ function checkError(error: Error): void {
 }
 
 export function request<T>(url: string, options?: RequestInit): Promise<T> {
-  return fetch(`${BASE_URL}/${url}`, options).then(checkResponse, checkError);
+  return fetch(`${BASE_URL}/${url}`, options).then(
+    checkResponse,
+    checkError
+  ) as Promise<T>;
 }

@@ -57,7 +57,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
           <ConstructorElementWrapper
             ingredient={ingredient}
             key={index}
-            index={index + 1}
+            index={hasBun ? index + 1 : index}
           />
         ))}
       </div>

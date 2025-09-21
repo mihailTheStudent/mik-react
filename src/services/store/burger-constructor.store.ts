@@ -12,7 +12,6 @@ type TBurgerConstructorStore = {
 
 type TIngredientChangeAction = {
   ingredient: TIngredient;
-  index?: number;
 };
 
 type TIngredientChangeCount = {
@@ -54,9 +53,11 @@ export const burgerConstructorSlice = createSlice({
   },
   reducers: {
     addIngredient: (state, action: PayloadAction<TIngredientChangeAction>) => {
-      const { ingredient, index = state.burgerIngredients.length - 1 } = action.payload;
+      const { ingredient } = action.payload;
+      const _isbunChosen = burgerConstructorSlice.selectors.isBunChosen.unwrapped(state);
+      const index = _isbunChosen ? 1 : 0;
       if (ingredient.type === 'bun') {
-        if (burgerConstructorSlice.selectors.isBunChosen.unwrapped(state)) {
+        if (_isbunChosen) {
           const previousBun = state.burgerIngredients.pop();
           state.burgerIngredients.shift();
           changeIngredientCount(state, { ingredient: previousBun!, change: -2 });
