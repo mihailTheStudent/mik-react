@@ -19,9 +19,7 @@ const initialState: TOrderStore = {
 
 export const makeOrder = createAsyncThunk(
   'order/make-order',
-  async (ingredients: TMakeOrderRequest) => {
-    return makeOrderApi(ingredients);
-  }
+  (ingredients: TMakeOrderRequest) => makeOrderApi(ingredients)
 );
 
 export const orderSlice = createSlice({

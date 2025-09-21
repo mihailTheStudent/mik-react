@@ -1,6 +1,7 @@
 import { IngredientDetails } from '@/components/burger-ingredients/ingredient-details/ingredient-details';
 import { Modal } from '@/components/common/modal/modal';
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
+import { useModal } from '@/hooks/useModal';
 import {
   addIngredient,
   ingredientsCount,
@@ -12,7 +13,7 @@ import {
 } from '@/services/store/selected-ingredient.store';
 import { INGREDIENT_ADD } from '@/utils/dnd.const';
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 
 import type { TIngredientAddItem } from '@/utils/dnd.const';
@@ -28,7 +29,6 @@ export const IngredientItem = ({
   ingredient,
 }: TBurgerIngredientItemProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
-  const isDetailsVisible = useAppSelector(selectedIngredient)?._id === ingredient._id;
   const count = useAppSelector(ingredientsCount)[ingredient._id];
 
   const [, dragRef] = useDrag<TIngredientAddItem>(
@@ -50,8 +50,17 @@ export const IngredientItem = ({
   }, [ingredient]);
 
   const onCloseModal = useCallback(() => {
+    closeModal();
     dispatch(unselect());
   }, []);
+
+  const { isModalOpen, openModal, closeModal } = useModal();
+  const _selectedIngredient = useAppSelector(selectedIngredient);
+  useEffect(() => {
+    if (_selectedIngredient?._id === ingredient._id) {
+      openModal();
+    }
+  }, [_selectedIngredient]);
 
   return (
     <>
@@ -76,7 +85,7 @@ export const IngredientItem = ({
           {name}
         </p>
       </article>
-      {isDetailsVisible && (
+      {isModalOpen && (
         <Modal title="Детали ингредиента" onClose={onCloseModal}>
           <IngredientDetails />
         </Modal>

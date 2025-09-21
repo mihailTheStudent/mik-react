@@ -68,7 +68,7 @@ export const ConstructorElementWrapper = ({
 
   return (
     <div
-      className={`${styles.wrapper} ${isLocked ? '' : styles.draggable} ${isDragging ? styles.is_drugging : ''}`}
+      className={`${styles.wrapper} ${isLocked ? '' : styles.draggable} ${isDragging ? styles.is_dragging : ''}`}
       ref={(ref) => {
         sortDragRef(ref);
         sortDropRef(ref);

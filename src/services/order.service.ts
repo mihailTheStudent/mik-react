@@ -1,4 +1,4 @@
-import { logError } from './logger.service';
+import { request } from './api.service';
 
 import type { TIngredient, TOrder } from '@/utils/types';
 
@@ -16,35 +16,24 @@ export type TOrderResponse = {
 
 export type TMakeOrderRequest = TIngredient['_id'][];
 
-const POST_MAKE_ORDER_URL = 'https://norma.nomoreparties.space/api/orders';
+const POST_MAKE_ORDER_URL = `orders`;
 
 export function makeOrderApi(ingredients: TMakeOrderRequest): Promise<TOrder> {
   const body: TMakeOrderBody = { ingredients: ingredients };
-  return fetch(POST_MAKE_ORDER_URL, {
+  return request<TOrderResponse>(POST_MAKE_ORDER_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
     body: JSON.stringify(body),
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      return Promise.reject(new Error(`Ошибка ${response.status}`));
-    })
-    .then((response: TOrderResponse) => {
-      if (response.success) {
-        const order: TOrder = {
-          name: response.name,
-          number: response.order.number,
-        };
-        return order;
-      }
-      return Promise.reject(new Error(`Ошибка: makeOrder -> success = false`));
-    })
-    .catch((e: Error) => {
-      logError(e);
-      throw e;
-    });
+  }).then((response: TOrderResponse) => {
+    if (response.success) {
+      const order: TOrder = {
+        name: response.name,
+        number: response.order.number,
+      };
+      return order;
+    }
+    return Promise.reject(new Error(`Ошибка: makeOrder -> success = false`));
+  });
 }

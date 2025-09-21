@@ -1,7 +1,12 @@
 import { Modal } from '@/components/common/modal/modal';
 import { Price } from '@/components/common/price/price';
 import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
-import { burgerIngredients, clean } from '@/services/store/burger-constructor.store';
+import { useModal } from '@/hooks/useModal';
+import {
+  burgerIngredients,
+  clean,
+  isBunChosen,
+} from '@/services/store/burger-constructor.store';
 import {
   isError,
   isLoading,
@@ -9,25 +14,26 @@ import {
   clean as cleanOrder,
 } from '@/services/store/order.store';
 import { Button } from '@krgaa/react-developer-burger-ui-components';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 import { OrderDetails } from '../order-details/order-details';
 
 import styles from './burger-order.module.css';
 
 export const BurgerOrder = (): React.JSX.Element => {
-  const [isOrderVisible, setIsOrderVisible] = useState(false);
+  const { isModalOpen, openModal, closeModal } = useModal();
 
   const dispatch = useAppDispatch();
   const _burgerIngredients = useAppSelector(burgerIngredients);
   const loading = useAppSelector(isLoading);
+  const isBurgerCorrect = useAppSelector(isBunChosen);
   const error = useAppSelector(isError);
 
   const onCloseModal = useCallback(() => {
     if (loading) {
       return;
     }
-    setIsOrderVisible(false);
+    closeModal();
     if (!error) {
       dispatch(clean());
       dispatch(cleanOrder());
@@ -36,7 +42,7 @@ export const BurgerOrder = (): React.JSX.Element => {
 
   const onOrderSubmitHandler = useCallback(() => {
     void dispatch(makeOrder(_burgerIngredients.map((i) => i._id)));
-    setIsOrderVisible(true);
+    openModal();
   }, [_burgerIngredients]);
 
   const getTotalPrice = useCallback(() => {
@@ -49,7 +55,7 @@ export const BurgerOrder = (): React.JSX.Element => {
     <section className={styles.order}>
       <Price price={totalPrice} size="m" />
       <Button
-        disabled={loading}
+        disabled={loading || !isBurgerCorrect}
         type="primary"
         htmlType="submit"
         extraClass="ml-10"
@@ -57,7 +63,7 @@ export const BurgerOrder = (): React.JSX.Element => {
       >
         Оформить заказ
       </Button>
-      {isOrderVisible && (
+      {isModalOpen && (
         <Modal onClose={onCloseModal}>
           <OrderDetails />
         </Modal>
