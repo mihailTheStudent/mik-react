@@ -1,6 +1,7 @@
-import { getIngredients } from '@/services/ingredents.service';
+import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
+import { getIngredients, isError, isLoading } from '@/services/store/ingredients.store';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect } from 'react';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
@@ -8,43 +9,17 @@ import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredi
 
 import { ErrorMessage } from '../common/error-message/error-message';
 
-import type { TIngredient } from '@/utils/types';
-
 import styles from './app.module.css';
 
-type IngredientsResponse = {
-  isLoading: boolean;
-  isError: boolean;
-  ingredients: TIngredient[];
-};
-
 export const App = (): React.JSX.Element => {
-  const [ingredientsResult, setIngredientsResult] = useState<IngredientsResponse>({
-    isLoading: true,
-    isError: false,
-    ingredients: [],
-  });
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    setIngredientsResult({ ...ingredientsResult, isLoading: true });
-    getIngredients()
-      .then((ingredients) => {
-        setIngredientsResult({
-          isLoading: false,
-          isError: false,
-          ingredients,
-        });
-      })
-      .catch(() => {
-        setIngredientsResult({
-          isLoading: false,
-          isError: true,
-          ingredients: [],
-        });
-      });
+  useLayoutEffect(() => {
+    void dispatch(getIngredients());
   }, []);
 
-  const { isLoading, isError, ingredients } = ingredientsResult;
+  const _isLoading = useAppSelector(isLoading);
+  const _isError = useAppSelector(isError);
 
   return (
     <div className={styles.app}>
@@ -52,14 +27,14 @@ export const App = (): React.JSX.Element => {
       <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
         Соберите бургер
       </h1>
-      {isLoading ? (
+      {_isLoading ? (
         <Preloader />
-      ) : isError ? (
+      ) : _isError ? (
         <ErrorMessage />
       ) : (
         <main className={`${styles.main} pl-5 pr-5 text text_type_main-default`}>
-          <BurgerIngredients ingredients={ingredients} />
-          <BurgerConstructor chosenIngredients={ingredients} />
+          <BurgerIngredients />
+          <BurgerConstructor />
         </main>
       )}
     </div>

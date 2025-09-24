@@ -1,68 +1,78 @@
-import { ConstructorElement } from '@krgaa/react-developer-burger-ui-components';
-import { useLayoutEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/hooks/store-hooks';
+import {
+  addIngredient,
+  burgerIngredients,
+  draggingCache,
+  isBunChosen,
+} from '@/services/store/burger-constructor.store';
+import { INGREDIENT_ADD } from '@/utils/dnd.const';
+import { useCallback } from 'react';
+import { useDrop } from 'react-dnd';
 
 import { BurgerOrder } from './burger-order/burger-order';
+import { ConstructorElementWrapper } from './constructor-element-wrapper/constructor-element-wrapper';
 
-import type { TIngredient } from '@utils/types';
+import type { TIngredientAddItem } from '@/utils/dnd.const';
+import type { TIngredient } from '@/utils/types';
 
 import styles from './burger-constructor.module.css';
 
-type TBurgerConstructorProps = {
-  chosenIngredients: TIngredient[];
-};
+export const BurgerConstructor = (): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const _addIngredient = useCallback((ingredient: TIngredient) => {
+    dispatch(addIngredient({ ingredient }));
+  }, []);
 
-export const BurgerConstructor = ({
-  chosenIngredients,
-}: TBurgerConstructorProps): React.JSX.Element => {
-  const [bun, setBun] = useState<TIngredient>();
-  const [ingredientsBetween, setIngredientsBetween] = useState<TIngredient[]>([]);
+  const [, addDropRef] = useDrop<TIngredientAddItem>(
+    () => ({
+      accept: INGREDIENT_ADD,
+      drop({ ingredient }): void {
+        _addIngredient(ingredient);
+      },
+    }),
+    []
+  );
 
-  useLayoutEffect(() => {
-    let ingredientsBetweenList: TIngredient[] = [];
-    let bun: TIngredient | undefined;
-    if (chosenIngredients?.length > 0) {
-      bun = chosenIngredients.find((ingredient) => ingredient.type === 'bun');
-      ingredientsBetweenList = chosenIngredients.filter(
-        (ingredient) => ingredient.type !== 'bun'
-      );
-    }
-    setBun(bun);
-    setIngredientsBetween(ingredientsBetweenList);
-  }, [chosenIngredients]);
+  const _draggingCache = useAppSelector(draggingCache);
+  const _burgerIngredients = useAppSelector(burgerIngredients);
+  const ingredients = _draggingCache ?? _burgerIngredients;
+
+  const hasBun = useAppSelector(isBunChosen);
+  const bun = hasBun ? ingredients[0] : null;
 
   return (
-    <section className={`${styles.burger_constructor} pt-4 pl-4 pr-4`}>
+    <section
+      className={`${styles.burger_constructor} pt-4 pl-4`}
+      ref={(ref) => {
+        addDropRef(ref);
+      }}
+    >
       {bun && (
-        <ConstructorElement
-          text={`${bun.name} (верх)`}
-          price={bun.price}
-          thumbnail={bun.image_mobile}
-          isLocked={true}
-          type="top"
-        />
+        <div className="pr-4">
+          <ConstructorElementWrapper ingredient={bun} type="bun-top" index={0} />
+        </div>
       )}
-      <div className={styles.burger_ingredients_between}>
-        {ingredientsBetween.map(({ name, price, image_mobile }, index) => {
-          return (
-            <ConstructorElement
-              key={index}
-              text={name}
-              price={price}
-              thumbnail={image_mobile}
-            />
-          );
-        })}
+      <div className={`${styles.burger_ingredients_between} custom-scroll`}>
+        {(hasBun ? ingredients.slice(1, -1) : ingredients).map((ingredient, index) => (
+          <ConstructorElementWrapper
+            ingredient={ingredient}
+            key={index}
+            index={hasBun ? index + 1 : index}
+          />
+        ))}
       </div>
       {bun && (
-        <ConstructorElement
-          text={`${bun.name} (низ)`}
-          price={bun.price}
-          thumbnail={bun.image_mobile}
-          isLocked={true}
-          type="bottom"
-        />
+        <div className="pr-4">
+          <ConstructorElementWrapper
+            ingredient={bun}
+            type="bun-bottom"
+            index={ingredients.length - 1}
+          />
+        </div>
       )}
-      <BurgerOrder ingredients={ingredientsBetween} />
+      <div className={styles.total_price}>
+        <BurgerOrder />
+      </div>
     </section>
   );
 };

@@ -1,15 +1,11 @@
-import type { TIngredient } from '@/utils/types';
+import { useAppSelector } from '@/hooks/store-hooks';
+import { selectedIngredient } from '@/services/store/selected-ingredient.store';
 
 import styles from './ingredient-details.module.css';
 
-type TIngredientDetails = {
-  ingredient: TIngredient;
-};
-
-export const IngredientDetails = ({
-  ingredient,
-}: TIngredientDetails): React.JSX.Element => {
-  const { image_large, name, calories, proteins, fat, carbohydrates } = ingredient;
+export const IngredientDetails = (): React.JSX.Element => {
+  const { image_large, name, calories, proteins, fat, carbohydrates } =
+    useAppSelector(selectedIngredient)!;
 
   return (
     <div className={styles.modal}>

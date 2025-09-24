@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.draggable {
+  cursor: grab;
+}
+
+.burger_ingredient {
+  min-height: 80px;
+  max-height: 80px;
+}
+
+.no_drag {
+  visibility: hidden;
+}
+
+.is_dragging {
+  --background-element: #514591;
+}
