@@ -16,7 +16,7 @@ export type TOrderResponse = {
 
 export type TMakeOrderRequest = TIngredient['_id'][];
 
-const POST_MAKE_ORDER_URL = `orders`;
+const POST_MAKE_ORDER_URL = 'orders';
 
 export function makeOrderApi(ingredients: TMakeOrderRequest): Promise<TOrder> {
   const body: TMakeOrderBody = { ingredients: ingredients };

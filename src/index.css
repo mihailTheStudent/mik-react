@@ -16,3 +16,8 @@ p {
     scrollbar-width: thin;
   }
 }
+
+a {
+  color: #4c4cff;
+  text-decoration: none;
+}
