@@ -68,6 +68,7 @@ export const ForgotPasswordPage = (): React.JSX.Element => {
           type="primary"
           htmlType="submit"
           extraClass="mb-20"
+          disabled={!isFormValid}
         >
           Восстановить
         </Button>

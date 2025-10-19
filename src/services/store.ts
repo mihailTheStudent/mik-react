@@ -5,6 +5,7 @@ import { ingredientsSlice } from './store/ingredients.store';
 import { isTabActiveSlice } from './store/is-tab-active.store';
 import { orderSlice } from './store/order.store';
 import { selectedIngredientSlice } from './store/selected-ingredient.store';
+import { userSlice } from './store/user.store';
 
 import type { Reducer } from '@reduxjs/toolkit';
 
@@ -14,6 +15,7 @@ const rootReducer: Record<string, Reducer> = {
   [orderSlice.reducerPath]: orderSlice.reducer,
   [selectedIngredientSlice.reducerPath]: selectedIngredientSlice.reducer,
   [isTabActiveSlice.reducerPath]: isTabActiveSlice.reducer,
+  [userSlice.reducerPath]: userSlice.reducer,
 };
 
 export const store = configureStore({

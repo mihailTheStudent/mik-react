@@ -1,3 +1,3 @@
 export const NotFoundPage = (): React.JSX.Element => {
-  return <></>;
+  return <>404</>;
 };

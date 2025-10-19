@@ -1,26 +1,52 @@
 import { request } from './api.service';
 
-type TRegisterUserRequest = {
-  email: string;
-  password: string;
-  name: string;
+export type TPatchUserRequest = {
+  email?: string;
+  password?: string;
+  name?: string;
 };
 
-type TRegisterUserResponse = {
+type TPatchUserResponse = {
   success: boolean;
-  message: string;
+  user: {
+    email: string;
+    name: string;
+  };
 };
 
-const POST_REGISTER_USER_URL = 'auth/register';
+type TGetUserResponse = {
+  success: boolean;
+  user: {
+    email: string;
+    name: string;
+  };
+};
 
-export function registerUser(
-  body: TRegisterUserRequest
-): Promise<TRegisterUserResponse> {
-  return request<TRegisterUserResponse>(POST_REGISTER_USER_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
+const USER_URL = `auth/user`;
+
+export function getUserApi(): Promise<TGetUserResponse> {
+  return request<TGetUserResponse>(
+    USER_URL,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
     },
-    body: JSON.stringify(body),
-  });
+    true
+  );
+}
+
+export function patchUserApi(body: TPatchUserRequest): Promise<TPatchUserResponse> {
+  return request<TPatchUserResponse>(
+    USER_URL,
+    {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify(body),
+    },
+    true
+  );
 }

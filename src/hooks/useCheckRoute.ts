@@ -3,14 +3,18 @@ import { useNavigate } from 'react-router-dom';
 
 export const useCheckRoute = (
   ok: boolean | Promise<boolean>,
-  redirect: string
+  redirect: string,
+  stateObj?: object
 ): void => {
   const navigate = useNavigate();
   const checkAndNavigate = useCallback((pageIsOk: boolean) => {
     if (pageIsOk) {
       return;
     }
-    void navigate(redirect, { replace: true });
+    void navigate(redirect, {
+      replace: true,
+      ...(stateObj ? { state: stateObj } : {}),
+    });
   }, []);
 
   useEffect(() => {

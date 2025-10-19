@@ -19,6 +19,8 @@ export const ResetPasswordPage = (): React.JSX.Element => {
     token: '',
   });
 
+  const [email, setEmail] = useState('');
+
   const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState({
@@ -43,12 +45,18 @@ export const ResetPasswordPage = (): React.JSX.Element => {
     });
 
     if (success) {
-      await navigate('/login');
+      await navigate('/login', {
+        state: {
+          email,
+          password: formData.password,
+        },
+      });
     }
   }, [formData]);
 
-  const { state } = useSafeLocation<{ ok: boolean }>();
+  const { state } = useSafeLocation<{ ok: boolean; email: string }>();
   useCheckRoute(state?.ok, '/login');
+  setEmail(email);
 
   return (
     <section className={styles.container}>
@@ -78,6 +86,7 @@ export const ResetPasswordPage = (): React.JSX.Element => {
           type="primary"
           htmlType="submit"
           extraClass="mb-20"
+          disabled={!isFormValid}
         >
           Сохранить
         </Button>

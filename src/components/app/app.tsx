@@ -9,6 +9,7 @@ import { ResetPasswordPage } from '@/pages/reset-password/reset-password';
 import { useRoutes } from 'react-router-dom';
 
 import { AppHeader } from '../app-header/app-header';
+import { ProtectedRouteElement } from '../common/protected-route/protected-route';
 
 export const App = (): React.JSX.Element => {
   const element = useRoutes([
@@ -17,7 +18,7 @@ export const App = (): React.JSX.Element => {
     { path: '/register', element: <RegisterPage /> },
     { path: '/forgot-password', element: <ForgotPasswordPage /> },
     { path: '/reset-password', element: <ResetPasswordPage /> },
-    { path: '/profile/*', element: <ProfilePage /> },
+    { path: '/profile/*', element: <ProtectedRouteElement element={<ProfilePage />} /> },
     { path: '/ingredients/:id', element: <IngredientDetailsPage /> },
     { path: '*', element: <NotFoundPage /> },
   ]);
