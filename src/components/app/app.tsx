@@ -17,7 +17,7 @@ export const App = (): React.JSX.Element => {
     { path: '/register', element: <RegisterPage /> },
     { path: '/forgot-password', element: <ForgotPasswordPage /> },
     { path: '/reset-password', element: <ResetPasswordPage /> },
-    { path: '/profile', element: <ProfilePage /> },
+    { path: '/profile/*', element: <ProfilePage /> },
     { path: '/ingredients/:id', element: <IngredientDetailsPage /> },
     { path: '*', element: <NotFoundPage /> },
   ]);
